@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    .game-container {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 5px;
+      margin: 0 auto;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+      border: 2px solid #333;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .cell.taken {
+      cursor: not-allowed;
+    }
+
+    .message {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      color: #333;
+    }
+
+    @media (max-width: 480px) {
+      .game-container {
+        grid-template-columns: repeat(3, 70px);
+      }
+
+      .cell {
+        width: 70px;
+        height: 70px;
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="game-container" id="gameBoard"></div>
+    <div class="message" id="gameMessage">Player X's turn</div>
+  </div>
+
+  <script>
+    const gameBoard = document.getElementById('gameBoard');
+    const gameMessage = document.getElementById('gameMessage');
+    let currentPlayer = 'X';
+    let board = ['', '', '', '', '', '', '', '', ''];
+    let isGameOver = false;
+
+    // Create the game cells
+    function initializeGame() {
+      gameBoard.innerHTML = '';
+      board = ['', '', '', '', '', '', '', '', ''];
+      isGameOver = false;
+      currentPlayer = 'X';
+      gameMessage.textContent = `Player ${currentPlayer}'s turn`;
+
+      for (let i = 0; i < 9; i++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        cell.dataset.index = i;
+        gameBoard.appendChild(cell);
+      }
+    }
+
+    initializeGame();
+
+    // Handle cell click
+    gameBoard.addEventListener('click', (e) => {
+      const target = e.target;
+      const index = target.dataset.index;
+
+      if (!target.classList.contains('cell') || target.classList.contains('taken') || isGameOver) {
+        return;
+      }
+
+      // Mark the cell
+      board[index] = currentPlayer;
+      target.textContent = currentPlayer;
+      target.classList.add('taken');
+
+      // Check for a winner
+      if (checkWinner()) {
+        gameMessage.textContent = `Player ${currentPlayer} wins!`;
+        isGameOver = true;
+        setTimeout(promptRestart, 500);
+        return;
+      }
+
+      // Check for a draw
+      if (board.every(cell => cell !== '')) {
+        gameMessage.textContent = 'It\'s a draw!';
+        isGameOver = true;
+        setTimeout(promptRestart, 500);
+        return;
+      }
+
+      // Switch player
+      currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      gameMessage.textContent = `Player ${currentPlayer}'s turn`;
+    });
+
+    // Check for a winning combination
+    function checkWinner() {
+      const winningCombos = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6]            // diagonals
+      ];
+
+      return winningCombos.some(combo => {
+        const [a, b, c] = combo;
+        return board[a] && board[a] === board[b] && board[a] === board[c];
+      });
+    }
+
+    // Prompt to restart the game
+    function promptRestart() {
+      const restart = confirm('Game over! Do you want to play again?');
+      if (restart) {
+        initializeGame();
+      } else {
+        gameMessage.textContent = 'Thank you for playing!';
+      }
+    }
+  </script>
+</body>
+</html>
