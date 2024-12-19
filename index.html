@@ -78,7 +78,7 @@
     let board = ['', '', '', '', '', '', '', '', ''];
     let isGameOver = false;
 
-    // Create the game cells
+    
     function initializeGame() {
       gameBoard.innerHTML = '';
       board = ['', '', '', '', '', '', '', '', ''];
@@ -96,7 +96,7 @@
 
     initializeGame();
 
-    // Handle cell click
+    
     gameBoard.addEventListener('click', (e) => {
       const target = e.target;
       const index = target.dataset.index;
@@ -105,12 +105,12 @@
         return;
       }
 
-      // Mark the cell
+      
       board[index] = currentPlayer;
       target.textContent = currentPlayer;
       target.classList.add('taken');
 
-      // Check for a winner
+      
       if (checkWinner()) {
         gameMessage.textContent = `Player ${currentPlayer} wins!`;
         isGameOver = true;
@@ -118,7 +118,7 @@
         return;
       }
 
-      // Check for a draw
+      
       if (board.every(cell => cell !== '')) {
         gameMessage.textContent = 'It\'s a draw!';
         isGameOver = true;
@@ -126,17 +126,17 @@
         return;
       }
 
-      // Switch player
+      
       currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
       gameMessage.textContent = `Player ${currentPlayer}'s turn`;
     });
 
-    // Check for a winning combination
+    
     function checkWinner() {
       const winningCombos = [
-        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
-        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
-        [0, 4, 8], [2, 4, 6]            // diagonals
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], 
+        [0, 4, 8], [2, 4, 6]            
       ];
 
       return winningCombos.some(combo => {
@@ -145,7 +145,7 @@
       });
     }
 
-    // Prompt to restart the game
+    
     function promptRestart() {
       const restart = confirm('Game over! Do you want to play again?');
       if (restart) {
